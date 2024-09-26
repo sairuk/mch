@@ -7,8 +7,6 @@ from lib.mcd import MCD
 from lib.mcs import MCS
 from lib.raw import RAW
 
-#inputfile = "thps2.GME"
-inputfile = "Moto Racer 2 (2 Saves).gme"
 outputs = {
     "mcd": MCD, 
     "mcs": MCS,
@@ -36,8 +34,12 @@ def main(args):
 
     basename = os.path.splitext(inputfile)[0]
     for idx, key in enumerate(output.data.keys()):
-        fileno = f"{idx}".zfill(3)
-        fileout = f"{basename}-{fileno}.{output.ext}"
+        if len(output.data.keys()) > 1:
+            fileno = f"{idx}".zfill(3)
+            fileout = f"{basename}-{fileno}.{output.ext}"
+        else:
+            fileout = f"{basename}.{output.ext}"
+
         if outdir is not None and os.path.exists(outdir):
             fileout = os.path.join(outdir, fileout)
 

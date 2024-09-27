@@ -6,16 +6,27 @@ class GME(object):
             "savedata": {},
             "mcdata": {}
         }
-        self.bytes_game = b'\x51\x00'   # header
+
+        self.bytes_header = b'\x31\x32\x33\x2d\x34\x35\x36\x2d\x53\x54\x44\x00' # GME header: 123-456-STD
+        self.bytes_game = b'\x51\x00'   # save header
         self.bytes_save = b'\x53\x43'   # SC
         self.bytes_memc = b'\x4d\x43'   # MC
         self.MAXSIZE = 8192
         self.CHUNK_SIZE = 2
 
     def read(self, inputfile):
+        self.filename = inputfile
         self.gme = open(inputfile,'rb')
 
-    def headers(self):
+    def header(self):
+        self.gme.seek(0)
+        if self.gme.read(12) != self.bytes_header:
+            print(f"{self.filename} is not a valid DexDrive save")
+            return False
+        else:
+            return True
+
+    def saveheaders(self):
         cntr = 0
         self.gme.seek(0)
         chunk = self.gme.read(self.CHUNK_SIZE)
@@ -82,7 +93,10 @@ class GME(object):
 
     def process(self, inputfile):
         self.read(inputfile)
-        self.headers()
-        self.savedata()
-        self.mcdata()
+        if self.header():
+            self.saveheaders()
+            self.savedata()
+            self.mcdata()
+        else:
+            exit(1)
         self.close()

@@ -8,6 +8,7 @@ class MCD(object):
         self.data = {}
         self.dataset = dataset
         self.ext = "mcd"
+        self.header = b'\x4d\x43'   # memorycard data: MC
         return
 
     def process(self):

@@ -10,6 +10,7 @@ class MCS(object):
         self.data = {}
         self.dataset = dataset
         self.ext = "mcs"
+        self.header = b'\x51\x00'   # save header: Q
         return
 
     def process(self):

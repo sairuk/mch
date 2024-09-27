@@ -28,20 +28,21 @@ def main(args):
     try:
         output = outputs[outmode](gme.savedict)
     except:
-        raise ModeNotSupportedError(f"{outmode} is not supported")
-
+        print(f"{outmode} is not supported")
+        exit(1)
     output.process()
 
-    basename = os.path.splitext(inputfile)[0]
+    pathfile = os.path.splitext(inputfile)[0]
     for idx, key in enumerate(output.data.keys()):
         if len(output.data.keys()) > 1:
             fileno = f"{idx}".zfill(3)
-            fileout = f"{basename}-{fileno}.{output.ext}"
+            fileout = f"{pathfile}-{fileno}.{output.ext}"
         else:
-            fileout = f"{basename}.{output.ext}"
+            fileout = f"{pathfile}.{output.ext}"
 
         if outdir is not None and os.path.exists(outdir):
-            fileout = os.path.join(outdir, fileout)
+            basename = os.path.basename(fileout)
+            fileout = os.path.join(outdir, basename)
 
         print(f"Writing: {fileout}")
         with open(fileout,"wb") as mcf:

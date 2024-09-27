@@ -3,6 +3,7 @@ class RAW(object):
         self.data = {}
         self.dataset = dataset
         self.ext = "sav"
+        self.header = b'\x53\x43'   # save data: SC
         return
 
     # no header only savedata

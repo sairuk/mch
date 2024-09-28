@@ -3,14 +3,14 @@
 128b header
 save data
 """
-
+import lib.ps1card as ps1
 
 class MCS(object):
     def __init__(self, dataset):
         self.data = {}
         self.dataset = dataset
         self.ext = "mcs"
-        self.header = b'\x51\x00'   # save header: Q
+        self.header = ps1.PS1().bytes_game
         return
 
     def process(self):

@@ -10,7 +10,7 @@ class MCS(object):
         self.data = {}
         self.dataset = dataset
         self.ext = "mcs"
-        self.header = ps1.PS1().bytes_game
+        self.header = ps1.PS1().BYTES_SAVE_HEADER
         return
 
     def process(self):

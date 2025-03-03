@@ -6,6 +6,7 @@ from lib.gme import GME
 from lib.mcd import MCD
 from lib.mcs import MCS
 from lib.raw import RAW
+import lib.logger as logger
 
 outputs = {
     "mcd": MCD, 
@@ -24,11 +25,12 @@ def main(args):
 
     gme = GME()
     gme.process(inputfile)
+    output = outputs[outmode](gme.savedict)
 
     try:
         output = outputs[outmode](gme.savedict)
     except:
-        print(f"{outmode} is not supported")
+        logger.Logger()._log(f"{outmode} is not supported")
         exit(1)
     output.process()
 
@@ -44,7 +46,7 @@ def main(args):
             basename = os.path.basename(fileout)
             fileout = os.path.join(outdir, basename)
 
-        print(f"Writing: {fileout}")
+        logger.Logger()._log(f"Writing: {fileout}")
         with open(fileout,"wb") as mcf:
             mcf.write(output.data[key])
     return

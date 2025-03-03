@@ -1,4 +1,6 @@
 import lib.ps1card as ps1
+import lib.logger as logger
+import lib.error as error
 
 class GME(object):
     def __init__(self):
@@ -28,48 +30,43 @@ class GME(object):
         self.gme = open(inputfile,'rb')
 
     def consumption(self):
-        self.gme.seek(0)
         self.gme.seek(22)
 
     def header(self):
-        self.gme.seek(0)
         if self.gme.read(12) != self.bytes_header:
-            print(f"{self.filename} is not a valid DexDrive save")
-            return False
+            #logger.Logger()._log(f"{self.filename} is not a valid DexDrive save")
+            raise error.InvalidGMEFormat(f"{self.filename} is not a valid DexDrive save")
         else:
             return True
 
     def saveheaders(self, dstart=4032, dend=5823):
         cntr = 0
-        self.gme.seek(0)
         self.gme.seek(dstart)
         chunk = True
         while chunk:
             if self.gme.tell() >= dend:
                 break
             chunk = self.gme.read(ps1.PS1().CHUNK_SAVE_HEADER)
-            if chunk[:2] == ps1.PS1().bytes_game:
+            if chunk[:2] == ps1.PS1().BYTES_SAVE_HEADER:
                 self.savedict["headers"][cntr] = chunk
                 cntr = cntr + 1
 
         total_saves = len(self.savedict["headers"])
-        print(f"Found {total_saves} saves")
+        logger.Logger()._log(f"Found {total_saves} saves")
         return
 
     def mcdata(self, dstart=3904, dend=None):
-        self.gme.seek(0)
         self.gme.seek(dstart)
         self.savedict["mcdata"][0] = self.gme.read(ps1.PS1().CHUNK_MEMCARD)
         return
 
     def savedata(self, dstart=12096, dend=None):
         cntr = 0
-        self.gme.seek(0)
         self.gme.seek(dstart)
         chunk = True
         while chunk:
             chunk = self.gme.read(ps1.PS1().CHUNK_SAVE)
-            if chunk[:2] == ps1.PS1().bytes_save:
+            if chunk[:2] == ps1.PS1().BYTES_SAVE:
                 self.savedict["savedata"][cntr] = chunk
                 cntr = cntr + 1
         return
